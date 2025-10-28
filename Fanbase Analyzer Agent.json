@@ -1,0 +1,458 @@
+{
+  "name": "Fanbase Analyzer Agent",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "fan-compare",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -656,
+        272
+      ],
+      "id": "758efe5c-d13f-44f5-a18b-09ed3a964d8f",
+      "name": "Receive User Input",
+      "webhookId": "82372ff4-d9a3-43c0-8581-b3f6bccd8230"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "={{ $json.body.input }}\nFrom the sentence above extract exactly two subreddit-friendly names or keywords (short names someone would type as a subreddit or simple keyword) that represent the two celebrities or fan communities to compare. Output JSON only (no extra text) exactly in this format:\n\n{\"subreddit1\":\"...\",\"subreddit2\":\"...\"}\n\nIf only one name is present, set \"subreddit2\" to an empty string: {\"subreddit1\":\"Name\",\"subreddit2\":\"\"}.\n"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -448,
+        272
+      ],
+      "id": "3685b2d8-e806-4a1e-ab2a-cebfd00f03ed",
+      "name": "Extract Celebrity Names",
+      "credentials": {
+        "openAiApi": {
+          "id": "iXzir2BHk2EyA2zG",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "let outputText;\n\nif ($json.message && $json.message.content) {\n  outputText = $json.message.content;\n} else if ($json.text) {\n  outputText = $json.text;\n} else {\n  outputText = \"{}\";\n}\n\nlet parsed;\ntry {\n  parsed = JSON.parse(outputText);\n} catch (e) {\n  parsed = { subreddit1: \"\", subreddit2: \"\" };\n}\n\n// return one object that has both\nreturn [\n  {\n    json: {\n      subreddit1: parsed.subreddit1,\n      subreddit2: parsed.subreddit2\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -96,
+        272
+      ],
+      "id": "cb519c1a-cfc6-49d6-a297-d4396279c0fe",
+      "name": "Split Input into Subreddits"
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "subreddit": "={{ $json[\"subreddit1\"] }}\n",
+        "limit": 2,
+        "filters": {}
+      },
+      "type": "n8n-nodes-base.reddit",
+      "typeVersion": 1,
+      "position": [
+        256,
+        80
+      ],
+      "id": "31513bf2-da75-417f-b8d5-367967005764",
+      "name": "Fetch Reddit Posts (Celebrity 1)",
+      "credentials": {
+        "redditOAuth2Api": {
+          "id": "gCZm8fOggtWQJCh6",
+          "name": "Reddit account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "subreddit": "={{ $json.subreddit2 }}",
+        "limit": 2,
+        "filters": {}
+      },
+      "type": "n8n-nodes-base.reddit",
+      "typeVersion": 1,
+      "position": [
+        256,
+        464
+      ],
+      "id": "f7cc51dc-f81a-4a07-b65d-1c969fefdfba",
+      "name": "Fetch Reddit Posts (Celebrity 2)",
+      "credentials": {
+        "redditOAuth2Api": {
+          "id": "JdE9rwA9FJZaaq3P",
+          "name": "Reddit account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "18eb14a1-3716-48f8-87ce-e0721a7fd4a7",
+              "name": "post_title",
+              "value": "={{ $json[\"title\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "588bb0c0-6aca-4864-bfef-b0773f25a714",
+              "name": "post text",
+              "value": "={{ $json[\"selftext\"] ? $json[\"selftext\"] : $json[\"title\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "d72a26bc-d8e5-42d7-b163-1dadc6b77079",
+              "name": "fan_group",
+              "value": "={{ $json[\"subreddit\"] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        544,
+        80
+      ],
+      "id": "a88c4cb2-a643-4eb0-a244-41ad238c2a6c",
+      "name": "Clean Posts (Celebrity 1)"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "18eb14a1-3716-48f8-87ce-e0721a7fd4a7",
+              "name": "post_title",
+              "value": "={{ $json[\"title\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "588bb0c0-6aca-4864-bfef-b0773f25a714",
+              "name": "post text",
+              "value": "={{ $json[\"selftext\"] ? $json[\"selftext\"] : $json[\"title\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "d72a26bc-d8e5-42d7-b163-1dadc6b77079",
+              "name": "fan_group",
+              "value": "={{ $json[\"subreddit\"] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        560,
+        464
+      ],
+      "id": "cdda3eba-3b8e-4277-94d9-089c6e4a719d",
+      "name": "Clean Posts (Celebrity 2)"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        848,
+        272
+      ],
+      "id": "8cc711ef-3f96-46a9-93a3-7b3a87fc5b21",
+      "name": "Combine Fanbase Data"
+    },
+    {
+      "parameters": {
+        "jsCode": "return [\n  {\n    json: {\n      combinedText: items.map(item => {\n        return `Fan Group: ${item.json.fan_group}\\nTitle: ${item.json.post_title}\\nText: ${item.json.post_text}`;\n      }).join(\"\\n\\n----------------------\\n\\n\")\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1040,
+        272
+      ],
+      "id": "dc991a89-c421-4681-ac8d-c56e057c44c7",
+      "name": "Prepare Combined Text"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get combined text from previous node\nconst combinedText = $json.combinedText || \"\";\n\n// Basic safety & quality checks\nif (combinedText.trim().length < 200) {\n  return [{ json: { valid: false, reason: \"Not enough Reddit data for reliable analysis.\" } }];\n}\n\n// Optional simple profanity/NSFW filter (expand list as needed)\nconst badWords = [\"nsfw\", \"sex\", \"nude\", \"violence\", \"hate\", \"kill\", \"racist\"];\nconst lowerText = combinedText.toLowerCase();\n\nfor (const word of badWords) {\n  if (lowerText.includes(word)) {\n    return [{ json: { valid: false, reason: \"Content contains unsafe or NSFW material.\" } }];\n  }\n}\n\n// If all checks pass\nreturn [{ json: { valid: true, combinedText } }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        832,
+        624
+      ],
+      "id": "d2c13806-0841-444d-b3e8-1dc41cb8b76d",
+      "name": "Validate Posts(Guardrail)"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "2047c03b-f2bb-4d3f-99df-64bac44681fa",
+              "leftValue": "={{ $json[\"valid\"] }}\n",
+              "rightValue": "true",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1072,
+        624
+      ],
+      "id": "b1def364-d35b-42d2-b483-61b30de3a06a",
+      "name": "Is Data Valid?"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Here are some recent Reddit posts about two celebrities:\n{{ $json.combinedText }}\n\nYour primary task is to analyze and compare the *fanbase sentiment and engagement* for both celebrities.  \nFocus mainly on aspects such as positivity, emotional tone, interaction depth, and overall engagement quality across posts.\n\nIf there has been a recent real-world incident or event (e.g., a match, award, performance, interview, controversy, or release) that strongly impacts current fan discussions, briefly consider **only one** such relevant situation — but do not make it the central focus. Use it merely to support your fanbase analysis.\n\nThen, present the results in this structured format:\n\nCelebrity 1: [name] — Positivity: [X]% — Engagement: [Y]%\nCelebrity 2: [name] — Positivity: [X]% — Engagement: [Y]%\n\nWinner: [Celebrity Name]\nSummary (3 lines): [Brief comparative summary emphasizing fanbase behavior]\nProfessional Analysis (in point wise) (5 lines): Provide a detailed, professional-style explanation focused on *fanbase activity, emotional tone, engagement quality, and language positivity*, mentioning real-world context influence only if relevant.\n\n"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        1360,
+        272
+      ],
+      "id": "c0e593a6-50aa-4986-b2a6-30fc6e8bfedb",
+      "name": "Analyze Fanbase Sentiment",
+      "credentials": {
+        "openAiApi": {
+          "id": "iXzir2BHk2EyA2zG",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Receive User Input').first().json.body.email }}\n",
+        "subject": "Fanbase Analysis Report",
+        "message": "=Hello 👋,  Here’s your latest fanbase analysis summary:  {{$json[\"message\"][\"content\"]}}  — Twitter Fanbase Analyzer Bot",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1680,
+        272
+      ],
+      "id": "490d4dcb-cf3d-45e9-a9fc-f1c7ff1fad1b",
+      "name": "Send Fanbase Report",
+      "webhookId": "a5583f6f-9cc5-4260-8a1c-14f711e7ea05",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "RD5JSZ0MlRkMBeiE",
+          "name": "Gmail account 7"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Receive User Input": {
+      "main": [
+        [
+          {
+            "node": "Extract Celebrity Names",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Celebrity Names": {
+      "main": [
+        [
+          {
+            "node": "Split Input into Subreddits",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Input into Subreddits": {
+      "main": [
+        [
+          {
+            "node": "Fetch Reddit Posts (Celebrity 1)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Fetch Reddit Posts (Celebrity 2)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Reddit Posts (Celebrity 1)": {
+      "main": [
+        [
+          {
+            "node": "Clean Posts (Celebrity 1)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Reddit Posts (Celebrity 2)": {
+      "main": [
+        [
+          {
+            "node": "Clean Posts (Celebrity 2)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clean Posts (Celebrity 1)": {
+      "main": [
+        [
+          {
+            "node": "Combine Fanbase Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clean Posts (Celebrity 2)": {
+      "main": [
+        [
+          {
+            "node": "Combine Fanbase Data",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Combine Fanbase Data": {
+      "main": [
+        [
+          {
+            "node": "Prepare Combined Text",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Combined Text": {
+      "main": [
+        [
+          {
+            "node": "Validate Posts(Guardrail)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Posts(Guardrail)": {
+      "main": [
+        [
+          {
+            "node": "Is Data Valid?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Data Valid?": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Analyze Fanbase Sentiment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze Fanbase Sentiment": {
+      "main": [
+        [
+          {
+            "node": "Send Fanbase Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "30002cea-9d14-4a35-a930-e2563d5d24ef",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "87ab1e091c9d7cbb90c81bbb3ecc2d27859400f2d47a6c666c8cf01c8c01bbd9"
+  },
+  "id": "seLuUBTXjaYjj2d9",
+  "tags": []
+}
