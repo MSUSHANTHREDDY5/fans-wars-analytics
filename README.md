@@ -1,65 +1,34 @@
-# fans-wars-analytics
-AGENTIC AI PROJECT(TWITTER_X AS RESOURCE AND GOOGLE COLAB,N8N FRAMEWWORK AS TOOLS)
+# ⚡ Fan Wars Analyzer (Reddit-Gmail)
 
-# 📊 Fans Wars – Agentic Automation Project
-
-## 🧭 Overview
-**Fans Wars** is an Agentic AI project that automates the process of analyzing fan interactions on **Twitter (X)**.  
-It compares activity between two or more fan communities (for example, *#TeamSRK* vs *#TeamSalman*) and automatically sends analytical reports to Gmail.
-
-The entire process is automated using **n8n** workflows and **Google Colab**, without any manual intervention.
+> **Autonomously compares fanbases of two celebrities using Reddit data and AI-driven sentiment analysis — powered by n8n, OpenAI, and automated email reporting.**
 
 ---
 
-## 🎯 Objective
-To design an **Agentic system** that:
-- Collects real-time data from **Twitter/X**
-- Analyzes fan engagement, sentiment, and activity trends
-- Sends automated reports to **Gmail** using AI-generated summaries
+## 🎯 Overview
+
+The **Fan Wars Analyzer** is an *Agentic AI* workflow that dynamically analyzes and compares the fanbase activity between any two celebrities based on real Reddit discussions.  
+Users simply send an input like `"Messi vs Ronaldo"` along with their email — the system automatically fetches posts, analyzes engagement and sentiment, considers recent real-world context (like a match, award, or controversy), and sends a structured comparison report to the user’s inbox.
 
 ---
 
-## ⚙️ Tools & Technologies
+## 🧠 Highlights
 
-| Type | Tool/Platform | Purpose |
-|------|----------------|----------|
-| **Resource** | Twitter (X) | Source of fan data |
-| **Tool 1** | Google Colab | Data scraping, cleaning, and analysis |
-| **Tool 2** | n8n | Automation workflow and agentic intelligence |
-| **Tool 3** | Gmail | Delivery of daily analytical reports |
-| **Tool 4** | Google Sheets | *(Optional)* Store tweet data and metrics |
-
----
-
-## 🔁 Workflow
-1. **n8n** triggers the process automatically (using a Cron node).  
-2. **Google Colab** scrapes Twitter data using `snscrape` and performs sentiment & engagement analysis.  
-3. The analyzed data is returned to **n8n**, which uses an **AI Node** to generate human-readable insights.  
-4. Finally, **n8n** sends the report to Gmail with summary and charts.
+- **Fully Agentic Workflow:** Makes decisions based on data validity, automatically handles safe/unsafe inputs, and self-directs output paths.  
+- **Dynamic Input Handling:** Accepts any user-provided celebrity pair and email through a single Webhook call.  
+- **Context-Aware AI Reasoning:** Incorporates *real-world incidents* from each celebrity’s domain (e.g., sports, film, awards).  
+- **Validation Guardrails:** Detects insufficient or unsafe Reddit content before AI processing.  
+- **Automated Email Reporting:** Sends personalized results with key metrics and analysis.  
+- **Built Entirely in n8n** with Reddit, OpenAI, and Gmail integrations.
 
 ---
 
-## 💡 Example Output (Email)
-**Subject:** Fans Wars – Daily Report  
+## 🧩 High-Level Flow
 
+**Webhook Input → Validate & Parse → Fetch Reddit Data → Clean & Merge → Analyze via LLM → Send Email**
 
----
+Two main paths:
+1. ✅ **Valid Data Path** → Full AI Analysis → Email Report  
+2. ❌ **Invalid Data Path** → Skip AI → Send Polite Validation Message
 
-## 🕒 Automation Cycle
-- Runs every 12 hours (configurable)
-- Automatically updates results and sends new reports
-
----
-
-## 💰 Cost
-This is a **zero-investment project**, using only free-tier tools (twitter tweets(X),n8n Cloud, Google Colab, and Gmail).
-
----
-
-## 👨‍💻 Author
-**M Sushanth Reddy**  
-B.Tech 1st Year, VNR VJIET  
-📧 Email: [sushanthreddy2007@gmail.com](mailto:sushanthreddy2007@gmail.com)  
-🌐 GitHub: [MSUSHANTHREDDY5](https://github.com/MSUSHANTHREDDY5)
 
 
