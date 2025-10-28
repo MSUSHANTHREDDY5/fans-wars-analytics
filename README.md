@@ -1,17 +1,17 @@
-# ⚡ FanBase Analyzer (Reddit-Gmail)
+# FanBase Analyzer (Reddit-Gmail)
 
 > **Autonomously compares fanbases of two celebrities using Reddit data and AI-driven sentiment analysis — powered by n8n, OpenAI, and automated email reporting.**
 
 ---
 
-## 🎯 Overview
+## Overview
 
 The **Fan Wars Analyzer** is an *Agentic AI* workflow that dynamically analyzes and compares the fanbase activity between any two celebrities based on real Reddit discussions.  
 Users simply send an input like `"Messi vs Ronaldo"` along with their email — the system automatically fetches posts, analyzes engagement and sentiment, considers recent real-world context (like a match, award, or controversy), and sends a structured comparison report to the user’s inbox.
 
 ---
 
-## 🧠 Highlights
+## Highlights
 
 - **Fully Agentic Workflow:** Makes decisions based on data validity, automatically handles safe/unsafe inputs, and self-directs output paths.  
 - **Dynamic Input Handling:** Accepts any user-provided celebrity pair and email through a single Webhook call.  
@@ -22,7 +22,7 @@ Users simply send an input like `"Messi vs Ronaldo"` along with their email — 
 
 ---
 
-## 🧩 High-Level Flow
+## High-Level Flow
 
 **Webhook Input → Validate & Parse → Fetch Reddit Data → Clean & Merge → Analyze via LLM → Send Email**
 
