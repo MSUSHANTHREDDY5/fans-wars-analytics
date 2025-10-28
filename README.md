@@ -8,11 +8,27 @@ This workflow accepts a user input (webhook), extracts two subreddit/keyword nam
 - **Outputs:** Email report (HTML) with AI analysis and chart image
 - **Model:** OpenAI (configured via n8n LangChain/OpenAI node)
 
+
+Workflow JSON: [Fanbase Analyzer Agent Workflow.json](https://github.com/MSUSHANTHREDDY5/fans-wars-analytics/blob/main/Fanbase%20Analyzer%20Agent.json)
+
 ---
 
 ## 📸 Visuals
 
 ![Workflow Snapshot](Worflow%20-n8n-Snapshot.png)
+
+Terminal Input:
+![Terminal Input](https://github.com/MSUSHANTHREDDY5/fans-wars-analytics/blob/main/WorkFLow-Terminal(curl)-Input.png)
+
+Gmail Output:
+![Gmail Output](https://github.com/MSUSHANTHREDDY5/fans-wars-analytics/blob/main/WorkFlow-Gmail-Output.png)
+
+
+Data vizualization chart:
+![Data vizualization chart](https://github.com/MSUSHANTHREDDY5/fans-wars-analytics/blob/main/visualization-chart.png)
+
+Demo Video:
+WorkFlow run: [WorFlow Execution.mp4](https://github.com/MSUSHANTHREDDY5/fans-wars-analytics/blob/main/WorkFlow-Execution(3).mp4)
 
 ---
 
@@ -50,7 +66,7 @@ This workflow accepts a user input (webhook), extracts two subreddit/keyword nam
 
 ---
 
-## 🧩 Node Breakdown
+##  Node Breakdown
 
 ### 1. Receive User Input (Webhook)
 - Method: `POST`
@@ -92,10 +108,10 @@ This workflow accepts a user input (webhook), extracts two subreddit/keyword nam
 - Output structure:
 ```json
 {
-  "celeb1": "Taylor Swift",
+  "celeb1": "Vinicus Jr",
   "pos1": 85,
   "eng1": 92,
-  "celeb2": "Selena Gomez",
+  "celeb2": "Lamine Yamal",
   "pos2": 78,
   "eng2": 88
 }
@@ -110,26 +126,18 @@ This workflow accepts a user input (webhook), extracts two subreddit/keyword nam
 
 ---
 
-## 🧾 Example Output
+##  Example Output
 
-**Subject:** “Fanbase Comparison Report — Taylor Swift vs Selena Gomez”  
+**Subject:** “Fanbase Comparison Report — Vinicus Jr vs Lamine Yamal”  
 
 **Email Body (HTML)**:
-```
-Celebrity 1: Taylor Swift — Positivity: 85% — Engagement: 92%
-Celebrity 2: Selena Gomez — Positivity: 78% — Engagement: 88%
 
-Winner: **Taylor Swift**
+Gmail Output:
+![Gmail Output](https://github.com/MSUSHANTHREDDY5/fans-wars-analytics/blob/main/WorkFlow-Gmail-Output.png)
 
-Summary:
-- Both fanbases are highly engaged, but Swifties show stronger positivity.
-- Selena’s community remains loyal and emotionally expressive.
-
-[Chart Image]
-```
 ---
 
-## ⚙️ Setup & Configuration
+##  Setup & Configuration
 
 ### Prerequisites
 - n8n (Cloud or Self-hosted)
@@ -149,7 +157,7 @@ Summary:
 
 ---
 
-## 🧱 Data Validation Example (Guardrail)
+##  Data Validation Example (Guardrail)
 
 ```js
 const combinedText = $json.combinedText || '';
@@ -165,7 +173,7 @@ return [{ json: { valid: true, combinedText } }];
 
 ---
 
-## 🧮 Chart Data Generation Example
+##  Chart Data Generation Example
 
 ```js
 const text = $json.message?.content || '';
@@ -181,7 +189,7 @@ return [{
 
 ---
 
-## 🚀 Running the Workflow
+##  Running the Workflow
 
 1. **POST** to the webhook endpoint `/webhook/fan-compare`.
 2. Workflow fetches Reddit posts for both celebrities.  
@@ -191,7 +199,7 @@ return [{
 
 ---
 
-## ⚠️ Error Handling
+##  Error Handling
 
 - If Reddit fetch fails → skip analysis and log error.  
 - If Guardrail fails → send polite “Insufficient data” email.  
@@ -200,7 +208,7 @@ return [{
 
 ---
 
-## 🔒 Security & Compliance
+##  Security & Compliance
 
 - Never expose API keys publicly.  
 - Use n8n credentials manager for all integrations.  
@@ -209,7 +217,7 @@ return [{
 
 ---
 
-## 🧩 Extensibility
+##  Extensibility
 
 - Add Twitter or Instagram APIs for multi-platform analysis.  
 - Integrate Slack or Discord for instant summary notifications.  
@@ -218,12 +226,18 @@ return [{
 
 ---
 
-## 📚 References
+##  References
 
-- Workflow JSON: `Fanbase Analyzer Agent.json`
-- Workflow Snapshot: `Worflow -n8n-Snapshot.png`
-- APIs Used:
-  - Reddit API
-  - OpenAI API
-  - QuickChart API
-  - Gmail API
+Workflow JSON: [Fanbase Analyzer Agent Workflow.json](https://github.com/MSUSHANTHREDDY5/fans-wars-analytics/blob/main/Fanbase%20Analyzer%20Agent.json)
+
+Workflow Snapshot:[Workflow-image.png](https://github.com/MSUSHANTHREDDY5/fans-wars-analytics/blob/main/Worflow%20-n8n-Snapshot.png)
+
+Terminal Input:[Termninal-image.png](https://github.com/MSUSHANTHREDDY5/fans-wars-analytics/blob/main/WorkFLow-Terminal(curl)-Input.png)
+
+Gmail Output:[Gmail-image.png](https://github.com/MSUSHANTHREDDY5/fans-wars-analytics/blob/main/WorkFlow-Gmail-Output.png)
+
+Data vizualization chart:[Visualization-image.png](https://github.com/MSUSHANTHREDDY5/fans-wars-analytics/blob/main/visualization-chart.png)
+
+WorkFlow run: [WorFlow Execution.mp4](https://github.com/MSUSHANTHREDDY5/fans-wars-analytics/blob/main/WorkFlow-Execution(3).mp4)
+
+---
