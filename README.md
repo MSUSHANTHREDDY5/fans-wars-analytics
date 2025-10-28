@@ -1,4 +1,4 @@
-# ⚡ Fan Wars Analyzer (Reddit-Gmail)
+# ⚡ FanBase Analyzer (Reddit-Gmail)
 
 > **Autonomously compares fanbases of two celebrities using Reddit data and AI-driven sentiment analysis — powered by n8n, OpenAI, and automated email reporting.**
 
