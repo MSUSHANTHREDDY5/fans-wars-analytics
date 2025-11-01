@@ -240,4 +240,6 @@ Data vizualization chart:[Visualization-image.png](https://github.com/MSUSHANTHR
 
 WorkFlow run: [WorFlow Execution.mp4](https://github.com/MSUSHANTHREDDY5/fans-wars-analytics/blob/main/WorkFlow-Execution(3).mp4)
 
+Product PPT: [product PPT.pdf](https://github.com/MSUSHANTHREDDY5/fans-wars-analytics/blob/main/Fanbase%20Analyzer%20Agent-2.pdf)
+
 ---
